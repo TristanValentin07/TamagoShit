@@ -7,6 +7,8 @@ namespace LocalAI.Pipeline
     {
         public static string Build(AiInteractionContext context)
         {
+            var personality = context.Personality;
+
             var builder = new StringBuilder();
 
             builder.AppendLine("Tu es une IA intégrée dans une scène 3D interactive.");
@@ -14,6 +16,15 @@ namespace LocalAI.Pipeline
             builder.AppendLine("Tu dois répondre uniquement avec un JSON valide.");
             builder.AppendLine("N'ajoute aucun markdown, aucune balise, aucun commentaire, aucune explication.");
             builder.AppendLine();
+
+            builder.AppendLine("Personnalité de l'IA :");
+            builder.AppendLine($"- Nom : {personality.CharacterName}");
+            builder.AppendLine($"- Rôle : {personality.Role}");
+            builder.AppendLine($"- Ton : {personality.Tone}");
+            builder.AppendLine($"- Règles de comportement : {personality.BehaviorRules}");
+            builder.AppendLine($"- Histoire/personnage : {personality.Backstory}");
+            builder.AppendLine();
+
             builder.AppendLine("Format obligatoire :");
             builder.AppendLine("{");
             builder.AppendLine("  \"dialogue\": \"phrase courte affichable au joueur\",");
@@ -24,6 +35,7 @@ namespace LocalAI.Pipeline
             builder.AppendLine("  }");
             builder.AppendLine("}");
             builder.AppendLine();
+
             builder.AppendLine("Règles :");
             builder.AppendLine("- Le champ dialogue doit être court.");
             builder.AppendLine("- Le champ intent doit être une des valeurs autorisées.");
@@ -31,14 +43,17 @@ namespace LocalAI.Pipeline
             builder.AppendLine("- Si aucune action n'est utile, utilise action.type = \"none\".");
             builder.AppendLine("- Si la demande utilisateur est incompréhensible, utilise intent = \"fallback\".");
             builder.AppendLine();
+
             builder.AppendLine("Contexte de la scène :");
             builder.AppendLine($"- Scène : {context.SceneName}");
             builder.AppendLine($"- Machine : {context.MachineName}");
             builder.AppendLine($"- État machine : {context.CurrentMachineState}");
             builder.AppendLine();
+
             builder.AppendLine("Message joueur :");
             builder.AppendLine(context.PlayerInput);
             builder.AppendLine();
+
             builder.AppendLine("Réponds maintenant uniquement en JSON valide.");
 
             return builder.ToString();

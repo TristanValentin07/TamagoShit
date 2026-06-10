@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using LocalAI.Config;
 using LocalAI.Models;
 using LocalAI.Pipeline;
 using UnityEngine;
@@ -40,15 +41,18 @@ namespace LocalAI.Tests
 
         private async Task RunTestAsync()
         {
+            var personality = AiPersonalityStorage.LoadOrCreateDefault();
             var pipeline = new AiPipeline(modelName);
 
             var context = new AiInteractionContext(
                 sceneName,
                 machineName,
                 playerInput,
-                currentMachineState
+                currentMachineState,
+                personality
             );
 
+            Debug.Log($"Loaded AI personality: {personality.CharacterName}");
             Debug.Log("Sending request to local AI...");
 
             var response = await pipeline.RunAsync(
