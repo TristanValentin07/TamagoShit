@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using LocalAI.Config;
@@ -15,9 +16,9 @@ namespace LocalAI.Tests
 
         [Header("Test Context")]
         [SerializeField] private string sceneName = "SceneTestIA";
-        [SerializeField] private string machineName = "MachineSteampunk";
-        [SerializeField] private string currentMachineState = "inactive";
-        [SerializeField] private string playerInput = "Explique-moi ce que fait cette machine.";
+        [SerializeField] private string machineName = "Village insulaire avec plusieurs objets observables";
+        [SerializeField] private string currentMachineState = "Le puits est au centre de la place. Aucun objet n'est ciblé par défaut.";
+        [SerializeField] private string playerInput = "Regarde le puits.";
 
         private CancellationTokenSource cancellationTokenSource;
 
@@ -44,12 +45,33 @@ namespace LocalAI.Tests
             var personality = AiPersonalityStorage.LoadOrCreateDefault();
             var pipeline = new AiPipeline(modelName);
 
+            var history = new List<AiChatMessage>
+            {
+                new AiChatMessage("joueur", "Où est le puits ?"),
+                new AiChatMessage("momo", "Je crois qu'il est près du centre."),
+                new AiChatMessage("joueur", "Oui, il est au centre de l'île.")
+            };
+
+            var points = new List<SceneInterestPoint>
+            {
+                new SceneInterestPoint(
+                    "well",
+                    "le puits",
+                    "puits, centre, place centrale",
+                    "Un puits gris situé au centre de la place. Ce n'est pas un miroir.",
+                    "look_at, describe",
+                    Vector3.zero
+                )
+            };
+
             var context = new AiInteractionContext(
                 sceneName,
                 machineName,
                 playerInput,
                 currentMachineState,
-                personality
+                personality,
+                history,
+                points
             );
 
             Debug.Log($"Loaded AI personality: {personality.CharacterName}");

@@ -144,7 +144,7 @@ Transform:
   m_GameObject: {fileID: 64029642}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -156.14474, y: 0, z: -210.23044}
+  m_LocalPosition: {x: -100.7, y: 0, z: -292.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -257,13 +257,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.34447905, y: 0, z: 0, w: 0.938794}
-  m_LocalPosition: {x: 0, y: 56, z: -88.9}
+  m_LocalRotation: {x: 0.40119433, y: -0, z: -0, w: 0.91599303}
+  m_LocalPosition: {x: 0, y: 64.77, z: -98.86}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 40.3, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 47.306, y: 0, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -539,6 +539,8 @@ MonoBehaviour:
   stoppingDistance: 0.1
   minWaitTime: 3
   maxWaitTime: 10
+  idleDelayAfterUserCommand: 30
+  stopIdleMovementOnUserCommand: 1
   waypoints:
   - {fileID: 614727139}
   - {fileID: 64029643}
@@ -593,6 +595,111 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &746765528
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 746765529}
+  m_Layer: 0
+  m_Name: AI_InterestPoints
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &746765529
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 746765528}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2003181471}
+  - {fileID: 1171641753}
+  - {fileID: 866056890}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &762898493
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 762898495}
+  - component: {fileID: 762898496}
+  - component: {fileID: 762898494}
+  m_Layer: 0
+  m_Name: Scene AI Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &762898494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 762898493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1a542eac0187af41aa0e6c0895e4275, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalAI.Scene.SampleSceneAiController
+  modelName: qwen3:4b-instruct
+  createOllamaRuntimeIfMissing: 1
+  moleCharacter: {fileID: 0}
+  moleObjectName: Mole Rat@Walk Forward In Place
+  requireSceneMarkers: 1
+  moveSpeed: 2.2
+  acceleration: 8
+  angularSpeed: 540
+  stoppingDistance: 0.45
+  createNavMeshAgentIfMissing: 1
+  defaultPlayerMessage: Qu'est-ce que c'est que cet objet brillant ?
+  inputControlName: MomoChatInput
+  maxStoredMessages: 10
+--- !u!4 &762898495
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 762898493}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.02946, y: 3.61645, z: -7.44402}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &762898496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 762898493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 030c139a7c9aeac4ebf4eed73c1cf276, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalAI.Config.MolePersonalityInstaller
+  forceMolePersonalityOnStart: 1
 --- !u!1 &773587774
 GameObject:
   m_ObjectHideFlags: 0
@@ -618,7 +725,7 @@ Transform:
   m_GameObject: {fileID: 773587774}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -75.144745, y: 0, z: -258.33044}
+  m_LocalPosition: {x: -55.2, y: 0, z: -277.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -704,6 +811,57 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &866056889
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 866056890}
+  - component: {fileID: 866056891}
+  m_Layer: 0
+  m_Name: AI_Point_FruitStall
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &866056890
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 866056889}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 23, y: 3.9, z: -33.01}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 746765529}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &866056891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 866056889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 947cf7dbc63c09b4ab0998973410ee5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalAI.Scene.SceneInterestPointMarker
+  id: shop
+  displayName: Boutique
+  aliases: fruitstall, fruits, fruit baskets, baskets, food, veggies, vegetables,
+    fruits and vegetables, counter, boutique, grocery store, market
+  description: "Petite \xE9choppe. 4 cagettes de fruits et l\xE9gumes sont align\xE9es
+    devant."
+  allowedInteractions: look_at, describe, move_to
 --- !u!1 &904069246
 GameObject:
   m_ObjectHideFlags: 0
@@ -797,12 +955,62 @@ Transform:
   m_GameObject: {fileID: 1036578964}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -109.56474, y: 0, z: -213.32045}
+  m_LocalPosition: {x: -157, y: 3.72, z: -273.06}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1854771235}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1171641752
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1171641753}
+  - component: {fileID: 1171641754}
+  m_Layer: 0
+  m_Name: AI_Point_Well
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1171641753
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1171641752}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.3, y: 6.2, z: -8}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 746765529}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1171641754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1171641752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 947cf7dbc63c09b4ab0998973410ee5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalAI.Scene.SceneInterestPointMarker
+  id: well
+  displayName: Le Puits
+  aliases: "puits, vieux puits, centre, place centrale, milieu, milieu de l'\xEEle"
+  description: "Le puits gris situ\xE9 au centre de la place. Momo peut s'en servir
+    pour boire"
+  allowedInteractions: look_at, describe, move_to
 --- !u!1001 &1278808043
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1802,7 +2010,7 @@ Transform:
   m_GameObject: {fileID: 1590267540}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -105.854744, y: 0, z: -165.13045}
+  m_LocalPosition: {x: -101.6, y: 0, z: -222}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1847,6 +2055,56 @@ Transform:
   - {fileID: 904069247}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2003181470
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2003181471}
+  - component: {fileID: 2003181472}
+  m_Layer: 0
+  m_Name: AI_Point_Dock
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2003181471
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2003181470}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4.08, y: 5.18, z: -62.9}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 746765529}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2003181472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2003181470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 947cf7dbc63c09b4ab0998973410ee5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalAI.Scene.SceneInterestPointMarker
+  id: dock
+  displayName: Le ponton
+  aliases: ponton, dock, port, passerelle, bord de mer, mer, paysage
+  description: "Le ponton en bois \xE0 l'entr\xE9e de l'\xEEle, face \xE0 la mer.
+    Un petit bateau \xE0 rames y est attach\xE9 et flotte silencieusement au bout."
+  allowedInteractions: look_at, describe, move_to
 --- !u!1 &2026725704
 GameObject:
   m_ObjectHideFlags: 0
@@ -1872,7 +2130,7 @@ Transform:
   m_GameObject: {fileID: 2026725704}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -75.44475, y: 0, z: -221.43045}
+  m_LocalPosition: {x: -138.5, y: 0, z: -239.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1889,3 +2147,5 @@ SceneRoots:
   - {fileID: 1305957494}
   - {fileID: 1854771235}
   - {fileID: 470346174}
+  - {fileID: 762898495}
+  - {fileID: 746765529}

@@ -13,12 +13,19 @@ public class MolePlayableAI : MonoBehaviour
     public float agentRadius = 0.5f;
 
     [Header("Paramètres de déplacement")]
-    public float moveSpeed = 1.5f; 
+    public float moveSpeed = 1.5f;
     public float stoppingDistance = 0.2f;
 
     [Header("Paramètres de pause")]
     public float minWaitTime = 3f;
     public float maxWaitTime = 10f;
+
+    [Header("Idle")]
+    [Tooltip("Temps sans commande utilisateur avant que la taupe recommence à se promener toute seule.")]
+    public float idleDelayAfterUserCommand = 30f;
+
+    [Tooltip("Si true, une commande utilisateur stoppe immédiatement la promenade idle en cours.")]
+    public bool stopIdleMovementOnUserCommand = true;
 
     [Header("Références")]
     public Transform[] waypoints;
@@ -29,9 +36,14 @@ public class MolePlayableAI : MonoBehaviour
     private Animator animator;
     private int lastWaypointIndex = -1;
 
+    private float lastUserCommandTime;
+    private Coroutine idleRoutine;
+
     // Variables API Playables
     private PlayableGraph playableGraph;
     private AnimationClipPlayable clipPlayable;
+
+    public bool IsInUserCommandCooldown => Time.time - lastUserCommandTime < idleDelayAfterUserCommand;
 
     void Start()
     {
@@ -45,13 +57,65 @@ public class MolePlayableAI : MonoBehaviour
         animator = GetComponent<Animator>();
         SetupAnimationGraph();
 
+        // Empêche l'idle de partir instantanément au lancement si une commande IA arrive très vite.
+        lastUserCommandTime = Time.time;
+
         if (waypoints == null || waypoints.Length == 0)
         {
             Debug.LogError("Aucun waypoint assigné à la taupe !");
             return;
         }
 
-        StartCoroutine(MoleBehaviorRoutine());
+        idleRoutine = StartCoroutine(MoleBehaviorRoutine());
+    }
+
+    /// <summary>
+    /// À appeler depuis le script d'IA/chat dès que le joueur envoie une commande
+    /// ou dès que l'IA applique une action utilisateur.
+    /// </summary>
+    public void NotifyUserCommand()
+    {
+        lastUserCommandTime = Time.time;
+
+        if (!stopIdleMovementOnUserCommand || agent == null)
+        {
+            return;
+        }
+
+        if (agent.isOnNavMesh)
+        {
+            agent.ResetPath();
+            agent.isStopped = true;
+        }
+
+        StopWalkAnimation();
+    }
+
+    /// <summary>
+    /// Option pratique : à utiliser pour envoyer Momo quelque part depuis l'IA
+    /// sans que l'idle ne reprenne avant idleDelayAfterUserCommand secondes.
+    /// </summary>
+    public bool MoveToUserCommand(Vector3 destination)
+    {
+        NotifyUserCommand();
+
+        if (agent == null || !agent.isOnNavMesh)
+        {
+            Debug.LogWarning("Commande ignorée : NavMeshAgent absent ou pas sur le NavMesh.");
+            return false;
+        }
+
+        if (!NavMesh.SamplePosition(destination, out var hit, 4f, NavMesh.AllAreas))
+        {
+            Debug.LogWarning($"Commande ignorée : destination hors NavMesh ou trop loin du NavMesh : {destination}");
+            return false;
+        }
+
+        agent.isStopped = false;
+        agent.SetDestination(hit.position);
+        StartWalkAnimation();
+
+        return true;
     }
 
     private void SetupAnimationGraph()
@@ -61,50 +125,95 @@ public class MolePlayableAI : MonoBehaviour
         playableGraph = PlayableGraph.Create(gameObject.name + "_PlayableGraph");
         var playableOutput = AnimationPlayableOutput.Create(playableGraph, "Animation", animator);
         clipPlayable = AnimationClipPlayable.Create(playableGraph, walkClip);
-        
+
         playableOutput.SetSourcePlayable(clipPlayable);
         playableGraph.Play();
+        StopWalkAnimation();
     }
 
     private IEnumerator MoleBehaviorRoutine()
     {
         while (true)
         {
-            // Définir la destination
+            // Tant qu'une commande utilisateur est récente, l'idle ne choisit aucune nouvelle destination.
+            while (IsInUserCommandCooldown)
+            {
+                yield return null;
+            }
+
             Transform currentTarget = GetRandomWaypoint();
-            agent.SetDestination(currentTarget.position);
+
+            if (currentTarget == null || agent == null || !agent.isOnNavMesh)
+            {
+                yield return null;
+                continue;
+            }
+
             agent.isStopped = false;
+            agent.SetDestination(currentTarget.position);
+            StartWalkAnimation();
 
-            if (playableGraph.IsValid())
+            // Attendre d'arriver à destination, sauf si une commande utilisateur arrive entre temps.
+            while (!IsInUserCommandCooldown && (agent.pathPending || agent.remainingDistance > agent.stoppingDistance))
             {
-                clipPlayable.SetSpeed(1f);
+                LoopWalkAnimationIfNeeded();
+                yield return null;
             }
 
-            // Attendre d'arriver à destination
-            while (agent.pathPending || agent.remainingDistance > agent.stoppingDistance)
+            // Si une commande utilisateur arrive, on laisse le script de commande reprendre la main.
+            if (IsInUserCommandCooldown)
             {
-                // SÉCURITÉ : Force l'animation à boucler manuellement si le clip ne le fait pas de base
-                if (playableGraph.IsValid() && walkClip != null)
-                {
-                    if (clipPlayable.GetTime() >= walkClip.length)
-                    {
-                        clipPlayable.SetTime(0); // Rembobine l'animation au début instantanément
-                    }
-                }
-
-                yield return null; 
+                StopWalkAnimation();
+                yield return null;
+                continue;
             }
 
-            // Arrêt net (IA + Animation)
-            agent.isStopped = true;
-            if (playableGraph.IsValid())
+            // Arrêt net idle.
+            if (agent.isOnNavMesh)
             {
-                clipPlayable.SetSpeed(0f); 
+                agent.isStopped = true;
             }
 
-            // Pause
+            StopWalkAnimation();
+
             float waitTime = Random.Range(minWaitTime, maxWaitTime);
-            yield return new WaitForSeconds(waitTime);
+            float waited = 0f;
+
+            // Pause idle interruptible par commande utilisateur.
+            while (waited < waitTime && !IsInUserCommandCooldown)
+            {
+                waited += Time.deltaTime;
+                yield return null;
+            }
+        }
+    }
+
+    private void StartWalkAnimation()
+    {
+        if (playableGraph.IsValid())
+        {
+            clipPlayable.SetSpeed(1f);
+        }
+    }
+
+    private void StopWalkAnimation()
+    {
+        if (playableGraph.IsValid())
+        {
+            clipPlayable.SetSpeed(0f);
+        }
+    }
+
+    private void LoopWalkAnimationIfNeeded()
+    {
+        if (!playableGraph.IsValid() || walkClip == null)
+        {
+            return;
+        }
+
+        if (clipPlayable.GetTime() >= walkClip.length)
+        {
+            clipPlayable.SetTime(0);
         }
     }
 
@@ -124,6 +233,12 @@ public class MolePlayableAI : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (idleRoutine != null)
+        {
+            StopCoroutine(idleRoutine);
+            idleRoutine = null;
+        }
+
         if (playableGraph.IsValid())
         {
             playableGraph.Destroy();
