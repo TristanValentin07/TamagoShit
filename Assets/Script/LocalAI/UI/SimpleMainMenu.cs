@@ -30,7 +30,7 @@ namespace LocalAI.UI
             EnsureStyles();
 
             var panelWidth = Mathf.Min(620f, Screen.width - 80f);
-            var panelHeight = 420f;
+            var panelHeight = 450f;
             var panelRect = new Rect(
                 (Screen.width - panelWidth) * 0.5f,
                 (Screen.height - panelHeight) * 0.5f,
