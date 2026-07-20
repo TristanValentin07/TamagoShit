@@ -1,5 +1,14 @@
 {
   "dependencies": {
+    "com.pastis.camflow": {
+      "version": "https://github.com/LumineWollah/CamFlow.git?path=Packages/com.pastis.camflow",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.inputsystem": "1.7.0"
+      },
+      "hash": "bd783775dcc21ee3e66b7e6fad731b25c10034ea"
+    },
     "com.unity.ai.navigation": {
       "version": "2.0.9",
       "depth": 0,

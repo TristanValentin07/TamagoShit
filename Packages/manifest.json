@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.pastis.camflow": "https://github.com/LumineWollah/CamFlow.git?path=Packages/com.pastis.camflow",
     "com.unity.ai.navigation": "2.0.9",
     "com.unity.collab-proxy": "2.11.2",
     "com.unity.ide.rider": "3.0.38",
