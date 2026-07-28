@@ -7679,7 +7679,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LocalAI.Scene.SceneInterestPointMarker
   id: dragon
   displayName: La Machine
-  aliases: machine, robot, creature, monster, engine
+  aliases: dragon, machine, robot, creature, monster, engine
   description: "Le dragon m\xE9canique steampunk, gardien de l'\xEEle. Il r\xE9side
     sur le ponton. C'est une cr\xE9ature m\xE9canique faite de m\xE9tal gris, compos\xE9e
     de milliers de petites pi\xE8ces m\xE9caniques diverses et vari\xE9es telles
