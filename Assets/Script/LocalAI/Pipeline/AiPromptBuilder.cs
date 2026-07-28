@@ -25,15 +25,16 @@ namespace LocalAI.Pipeline
             builder.AppendLine("- Ne choisis pas un objet au hasard.");
             builder.AppendLine("- Si le joueur corrige une erreur précédente, reconnais la correction et utilise-la dans la suite.");
             builder.AppendLine("- Si aucun objet précis n'est mentionné, utilise action.type = \"none\" et action.target = \"none\".");
-            builder.AppendLine("- Tu ne modifies jamais la scène : pas d'allumage, pas d'extinction, pas de destruction, pas de transformation.");
+            builder.AppendLine("- Tu ne modifies jamais la scène sauf pour l'action spéciale activate_dragon, qui déclenche seulement l'animation d'attaque du dragon.");
             builder.AppendLine();
 
             builder.AppendLine("Règles d'action :");
             builder.AppendLine("- Si le joueur demande de regarder, observer, montrer ou décrire un objet, utilise action.type = \"look_at\".");
             builder.AppendLine("- Si le joueur demande d'aller, venir, marcher, se rendre, se rapprocher, rejoindre un objet ou un lieu, utilise action.type = \"move_to\".");
             builder.AppendLine("- Si le joueur demande de se reposer, s'asseoir ou attendre près d'un objet, utilise action.type = \"move_to\" vers cet objet.");
-            builder.AppendLine("- Le champ action.target doit être l'id exact du catalogue.");
-            builder.AppendLine("- Le dialogue doit correspondre à l'action. Si action.type = \"move_to\", tu peux dire que tu y vas. Si action.type = \"look_at\", dis que tu regardes.");
+            builder.AppendLine("- Si le joueur demande d'activer, réveiller, provoquer, attaquer, déclencher, lancer, démarrer ou interagir avec le dragon/la machine, utilise action.type = \"activate_dragon\" et action.target = \"dragon\".");
+            builder.AppendLine("- Le champ action.target doit être l'id exact du catalogue, sauf action.type = \"none\" où target vaut \"none\".");
+            builder.AppendLine("- Le dialogue doit correspondre à l'action. Si action.type = \"move_to\", tu peux dire que tu y vas. Si action.type = \"look_at\", dis que tu regardes. Si action.type = \"activate_dragon\", dis que tu déclenches le dragon/la machine.");
             builder.AppendLine();
 
             builder.AppendLine("Personnalité :");
@@ -86,9 +87,9 @@ namespace LocalAI.Pipeline
             builder.AppendLine("Format JSON obligatoire :");
             builder.AppendLine("{");
             builder.AppendLine("  \"dialogue\": \"phrase courte de Momo\",");
-            builder.AppendLine("  \"intent\": \"talk | explain_object | look_at_object | move_to_object | fallback\",");
+            builder.AppendLine("  \"intent\": \"talk | explain_object | look_at_object | move_to_object | activate_dragon | fallback\",");
             builder.AppendLine("  \"action\": {");
-            builder.AppendLine("    \"type\": \"none | look_at | describe | move_to\",");
+            builder.AppendLine("    \"type\": \"none | look_at | describe | move_to | activate_dragon\",");
             builder.AppendLine("    \"target\": \"id exact du catalogue ou none\"");
             builder.AppendLine("  }");
             builder.AppendLine("}");

@@ -21,6 +21,12 @@ namespace LocalAI.Scene
         [SerializeField] private Transform moleCharacter;
         [SerializeField] private string moleObjectName = "Mole Rat@Walk Forward In Place";
 
+        [Header("Dragon")]
+        [SerializeField] private Animator dragonAnimator;
+        [SerializeField] private string dragonObjectName = "dragon_attack";
+        [SerializeField] private string dragonMarkerId = "dragon";
+        [SerializeField] private string dragonAttackTrigger = "Attack";
+
         [Header("Interest points")]
         [SerializeField] private bool requireSceneMarkers = true;
 
@@ -35,6 +41,11 @@ namespace LocalAI.Scene
         [SerializeField] private string defaultPlayerMessage = "Salut Momo.";
         [SerializeField] private string inputControlName = "MomoChatInput";
 
+        [Header("Startup prompt")]
+        [SerializeField] private bool launchStartupPrompt = true;
+        [SerializeField] private string startupPrompt = "Salut, qui es-tu ?";
+        [SerializeField] private float startupPromptDelaySeconds = 0.5f;
+
         [Header("Conversation")]
         [SerializeField] private int maxStoredMessages = 10;
 
@@ -46,9 +57,11 @@ namespace LocalAI.Scene
         private AiPersonality personality;
         private CancellationTokenSource cancellationTokenSource;
         private NavMeshAgent navMeshAgent;
+        private MolePlayableAI molePlayableAI;
 
         private bool isThinking;
         private bool isMoving;
+        private bool startupPromptLaunched;
         private string playerMessage;
         private string dialogue = "Parle à Momo...";
         private string debugIntent = "idle";
@@ -77,7 +90,31 @@ namespace LocalAI.Scene
 
             ResolveSceneReferences();
             SetupNavMeshAgent();
+            ResolveDragonReferences();
             BuildInterestPointCatalogFromMarkers();
+        }
+
+        private async void Start()
+        {
+            if (!launchStartupPrompt || string.IsNullOrWhiteSpace(startupPrompt) || startupPromptLaunched)
+            {
+                return;
+            }
+
+            startupPromptLaunched = true;
+
+            if (startupPromptDelaySeconds > 0f)
+            {
+                var delayMilliseconds = Mathf.RoundToInt(startupPromptDelaySeconds * 1000f);
+                await Task.Delay(delayMilliseconds);
+            }
+
+            if (this == null || cancellationTokenSource == null || cancellationTokenSource.IsCancellationRequested)
+            {
+                return;
+            }
+
+            await AskMoleAsync(startupPrompt.Trim());
         }
 
         private void Update()
@@ -160,6 +197,7 @@ namespace LocalAI.Scene
             isThinking = true;
             dialogue = "Momo réfléchit...";
             debugIntent = "thinking";
+            molePlayableAI?.NotifyUserCommand();
 
             AddToHistory("joueur", message);
 
@@ -169,7 +207,7 @@ namespace LocalAI.Scene
                     UnityEngine.SceneManagement.SceneManager.GetActiveScene().name,
                     "Village insulaire avec points d'intérêt placés directement dans la scène Unity",
                     message,
-                    "Les positions des objets viennent de vrais GameObjects marqueurs placés dans la scène. Momo doit utiliser uniquement le catalogue fourni.",
+                    "Les positions des objets viennent de vrais GameObjects marqueurs placés dans la scène. Le dragon peut être activé avec l'action activate_dragon, target dragon. Momo doit utiliser uniquement le catalogue fourni.",
                     personality,
                     new List<AiChatMessage>(conversationHistory),
                     interestPoints
@@ -224,6 +262,14 @@ namespace LocalAI.Scene
                 return;
             }
 
+            molePlayableAI?.NotifyUserCommand();
+
+            if (actionType == "activate_dragon")
+            {
+                ActivateDragon();
+                return;
+            }
+
             if (!TryGetInterestPointPosition(action.Target, out var targetPosition))
             {
                 debugIntent = "target_unknown";
@@ -243,6 +289,31 @@ namespace LocalAI.Scene
             }
         }
 
+        private void ActivateDragon()
+        {
+            if (TryGetInterestPointPosition(dragonMarkerId, out var dragonPosition))
+            {
+                LookAtPosition(dragonPosition);
+            }
+
+            if (dragonAnimator == null)
+            {
+                ResolveDragonReferences();
+            }
+
+            if (dragonAnimator == null)
+            {
+                debugIntent = "dragon_missing";
+                Debug.LogWarning("Cannot activate dragon: no Animator found. Assign dragonAnimator or check dragonObjectName.");
+                return;
+            }
+
+            dragonAnimator.ResetTrigger(dragonAttackTrigger);
+            dragonAnimator.SetTrigger(dragonAttackTrigger);
+            debugIntent = "activate_dragon";
+            Debug.Log("Dragon attack animation triggered by AI.");
+        }
+
         private bool TryGetInterestPointPosition(string targetId, out Vector3 position)
         {
             position = default;
@@ -257,6 +328,13 @@ namespace LocalAI.Scene
 
         private void MoveToPosition(Vector3 targetPosition)
         {
+            if (molePlayableAI != null && molePlayableAI.MoveToUserCommand(targetPosition))
+            {
+                isMoving = true;
+                debugIntent = "move_to_object";
+                return;
+            }
+
             if (navMeshAgent == null)
             {
                 Debug.LogWarning("Cannot move Momo: no NavMeshAgent found.");
@@ -333,16 +411,71 @@ namespace LocalAI.Scene
 
         private void ResolveSceneReferences()
         {
+            if (moleCharacter == null)
+            {
+                var mole = GameObject.Find(moleObjectName);
+
+                if (mole != null)
+                {
+                    moleCharacter = mole.transform;
+                }
+            }
+
             if (moleCharacter != null)
+            {
+                molePlayableAI = moleCharacter.GetComponent<MolePlayableAI>();
+            }
+        }
+
+        private void ResolveDragonReferences()
+        {
+            if (dragonAnimator != null)
             {
                 return;
             }
 
-            var mole = GameObject.Find(moleObjectName);
-
-            if (mole != null)
+            if (!string.IsNullOrWhiteSpace(dragonObjectName))
             {
-                moleCharacter = mole.transform;
+                var dragonObject = GameObject.Find(dragonObjectName);
+
+                if (dragonObject != null)
+                {
+                    dragonAnimator = dragonObject.GetComponent<Animator>();
+
+                    if (dragonAnimator == null)
+                    {
+                        dragonAnimator = dragonObject.GetComponentInChildren<Animator>();
+                    }
+
+                    if (dragonAnimator == null)
+                    {
+                        dragonAnimator = dragonObject.GetComponentInParent<Animator>();
+                    }
+                }
+            }
+
+            if (dragonAnimator != null)
+            {
+                return;
+            }
+
+            var animators = FindObjectsOfType<Animator>(true);
+
+            foreach (var animatorCandidate in animators)
+            {
+                if (animatorCandidate == null || animatorCandidate.runtimeAnimatorController == null)
+                {
+                    continue;
+                }
+
+                var controllerName = animatorCandidate.runtimeAnimatorController.name.ToLowerInvariant();
+                var objectName = animatorCandidate.gameObject.name.ToLowerInvariant();
+
+                if (controllerName.Contains("dragon") || objectName.Contains("dragon"))
+                {
+                    dragonAnimator = animatorCandidate;
+                    return;
+                }
             }
         }
 
