@@ -1269,8 +1269,7 @@ MonoBehaviour:
   id: well
   displayName: Le Puits
   aliases: "puits, vieux puits, centre, place centrale, milieu, milieu de l'\xEEle"
-  description: "Le puits gris situ\xE9 au centre de la place. Momo peut s'en servir
-    pour boire"
+  description: "Le puits gris situ\xE9 au centre de la place."
   allowedInteractions: look_at, describe, move_to
 --- !u!1001 &1278808043
 PrefabInstance:
