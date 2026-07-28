@@ -33,38 +33,7 @@ L'objectif du projet est de créer une petite expérience interactive vivante : 
 Ce projet contient une scène dans laquelle le joueur peut discuter avec un petit personnage, Momo.  
 Momo est contrôlé par une IA locale exécutée avec Ollama. Il peut répondre au joueur, se souvenir des messages récents, se déplacer vers des points d'intérêt réels placés dans la scène, regarder des objets, et déclencher l'animation d'attaque du dragon.
 
-### Capture — Menu principal
-
-> **Placeholder image à remplacer**  
-> Chemin conseillé : `Docs/Images/main-menu.png`  
-> Dimensions recommandées : **1920 × 1080 px**  
-> Contenu attendu : menu principal avec les boutons `Jouer avec Momo par défaut`, `Jouer avec IA custom`, `Quitter`.
-
-```md
 ![Menu principal](Docs/Images/main-menu.png)
-```
-
-### Capture — Chat avec Momo
-
-> **Placeholder image à remplacer**  
-> Chemin conseillé : `Docs/Images/momo-chat.png`  
-> Dimensions recommandées : **1920 × 1080 px**  
-> Contenu attendu : SampleScene avec la chatbox visible, Momo dans la scène, une question utilisateur et une réponse IA.
-
-```md
-![Chat avec Momo](Docs/Images/momo-chat.png)
-```
-
-### Capture — Déplacement vers un point d'intérêt
-
-> **Placeholder image à remplacer**  
-> Chemin conseillé : `Docs/Images/momo-navmesh-interaction.png`  
-> Dimensions recommandées : **1920 × 1080 px**  
-> Contenu attendu : Momo en train de se déplacer vers le dock, le puits, le palmier ou un autre point d'intérêt.
-
-```md
-![Déplacement de Momo](Docs/Images/momo-navmesh-interaction.png)
-```
 
 ---
 
@@ -320,18 +289,9 @@ Au chargement de la scène, un premier prompt automatique est envoyé :
 Salut, qui es-tu ?
 ```
 
-Cela permet à Momo de se présenter immédiatement.
+Cela permet à Momo de se présenter immédiatement, d'autant que la première requête est la plus lente.
 
-### Capture — Présentation automatique de Momo
-
-> **Placeholder image à remplacer**  
-> Chemin conseillé : `Docs/Images/startup-prompt.png`  
-> Dimensions recommandées : **1920 × 1080 px**  
-> Contenu attendu : premier message automatique et réponse de présentation de Momo.
-
-```md
 ![Prompt automatique](Docs/Images/startup-prompt.png)
-```
 
 ---
 
@@ -347,16 +307,7 @@ Champs disponibles :
 - **Règles de comportement**
 - **Backstory / personnalité**
 
-### Capture — Menu IA custom
-
-> **Placeholder image à remplacer**  
-> Chemin conseillé : `Docs/Images/custom-ai-menu.png`  
-> Dimensions recommandées : **1920 × 1080 px**  
-> Contenu attendu : écran de personnalisation avec les champs remplis.
-
-```md
-![Menu IA custom](Docs/Images/custom-ai-menu.png)
-```
+![Menu IA custom](Docs/Images/custom-menu.png)
 
 ---
 
@@ -469,16 +420,7 @@ Placez les marqueurs :
 Pour un bâtiment, placez le marqueur devant la porte ou sur le chemin.  
 Pour un objet décoratif, placez le marqueur juste à côté, côté accessible.
 
-### Capture — Markers Unity
-
-> **Placeholder image à remplacer**  
-> Chemin conseillé : `Docs/Images/interest-point-markers.png`  
-> Dimensions recommandées : **1920 × 1080 px**  
-> Contenu attendu : vue Scene Unity avec les marqueurs `AI_Point_Dock`, `AI_Point_Well`, etc.
-
-```md
-![Markers de points d'intérêt](Docs/Images/interest-point-markers.png)
-```
+![Markers de points d'intérêt](Docs/Images/interest-point-marker.png)
 
 ---
 
@@ -522,17 +464,6 @@ Le script tente de le trouver automatiquement, mais si l'animation ne se déclen
 
 ```txt
 Attack
-```
-
-### Capture — Dragon attack
-
-> **Placeholder image à remplacer**  
-> Chemin conseillé : `Docs/Images/dragon-attack.png`  
-> Dimensions recommandées : **1920 × 1080 px**  
-> Contenu attendu : dragon pendant ou juste après l'animation d'attaque.
-
-```md
-![Animation attaque dragon](Docs/Images/dragon-attack.png)
 ```
 
 ---

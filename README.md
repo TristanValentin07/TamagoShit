@@ -4,6 +4,8 @@ Bienvenue dans **TamagoShit**, une petite expérience 3D interactive avec une î
 
 Ce guide explique comment préparer votre ordinateur, lancer le jeu, utiliser les fonctionnalités IA et résoudre les problèmes les plus courants.
 
+![Scène](Docs/Images/samplescene.png)
+
 ---
 
 ## 1. Présentation rapide
@@ -174,6 +176,8 @@ TamagoShit.exe
 
 Au lancement, vous arrivez sur le menu principal.
 
+![Menu](Docs/Images/main-menu.png)
+
 Les boutons disponibles sont :
 
 ### Jouer avec Momo par défaut
@@ -185,6 +189,8 @@ C'est l'option recommandée pour une première démonstration.
 ### Jouer avec IA custom
 
 Ouvre le menu de création de personnalité.
+
+![Custom](Docs/Images/custom-menu.png)
 
 Vous pouvez définir :
 
@@ -479,6 +485,8 @@ ollama list
 4. Testez l'API avec la commande de vérification du chapitre 5.
 
 ### Le jeu dit que l'IA locale ne répond pas
+
+![Custom](Docs/Images/fallback.png)
 
 Vérifiez qu'Ollama tourne.
 
