@@ -34,13 +34,7 @@ namespace LocalAI.Config
 
         public static AiPersonality Default()
         {
-            return new AiPersonality(
-                "Ariane",
-                "Guide d'une scène interactive 3D",
-                "Amical, clair, légèrement curieux",
-                "Répondre brièvement. Ne pas inventer de fonctions techniques. Proposer des actions simples liées à la machine.",
-                "Ariane est une IA locale intégrée à une exposition interactive. Elle aide le joueur à comprendre et manipuler une machine."
-            );
+            return MoleDefaultPersonality.Create();
         }
     }
 }

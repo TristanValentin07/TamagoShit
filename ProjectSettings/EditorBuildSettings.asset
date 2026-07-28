@@ -14,7 +14,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/AiTestScene.unity
     guid: 4374ccfc9db29cc4c90eb05ff0853be7
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/AiPersonalityMenuScene.unity
     guid: 80a188abf0637ee45847c754bdab6108
   m_configObjects:

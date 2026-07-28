@@ -38,7 +38,7 @@ namespace LocalAI.Scene
         [SerializeField] private bool createNavMeshAgentIfMissing = true;
 
         [Header("Chat")]
-        [SerializeField] private string defaultPlayerMessage = "Salut Momo.";
+        [SerializeField] private string defaultPlayerMessage = "Salut.";
         [SerializeField] private string inputControlName = "MomoChatInput";
 
         [Header("Startup prompt")]
@@ -63,7 +63,7 @@ namespace LocalAI.Scene
         private bool isMoving;
         private bool startupPromptLaunched;
         private string playerMessage;
-        private string dialogue = "Parle à Momo...";
+        private string dialogue = "Parle à l'IA...";
         private string debugIntent = "idle";
 
         private GUIStyle panelStyle;
@@ -71,6 +71,8 @@ namespace LocalAI.Scene
         private GUIStyle textStyle;
         private GUIStyle inputStyle;
         private GUIStyle hintStyle;
+
+        private string CharacterName => string.IsNullOrWhiteSpace(personality?.CharacterName) ? "l'IA" : personality.CharacterName;
 
         private void Awake()
         {
@@ -87,6 +89,7 @@ namespace LocalAI.Scene
             pipeline = new AiPipeline(modelName);
             cancellationTokenSource = new CancellationTokenSource();
             playerMessage = defaultPlayerMessage;
+            dialogue = $"Parle à {CharacterName}...";
 
             ResolveSceneReferences();
             SetupNavMeshAgent();
@@ -195,7 +198,7 @@ namespace LocalAI.Scene
         private async Task AskMoleAsync(string message)
         {
             isThinking = true;
-            dialogue = "Momo réfléchit...";
+            dialogue = $"{CharacterName} réfléchit...";
             debugIntent = "thinking";
             molePlayableAI?.NotifyUserCommand();
 
@@ -218,7 +221,7 @@ namespace LocalAI.Scene
                 dialogue = response.Dialogue;
                 debugIntent = response.Intent;
 
-                AddToHistory("momo", response.Dialogue);
+                AddToHistory(CharacterName.ToLowerInvariant(), response.Dialogue);
                 ApplyAction(response.Action);
             }
             catch (Exception exception)

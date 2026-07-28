@@ -8,6 +8,7 @@ namespace LocalAI.UI
     {
         [Header("Scene")]
         [SerializeField] private string sceneToLoad = "SampleScene";
+        [SerializeField] private string customPersonalityScene = "AiPersonalityMenuScene";
 
         [Header("Look")]
         [SerializeField] private string title = "TamagoShit";
@@ -29,8 +30,8 @@ namespace LocalAI.UI
         {
             EnsureStyles();
 
-            var panelWidth = Mathf.Min(620f, Screen.width - 80f);
-            var panelHeight = 450f;
+            var panelWidth = Mathf.Min(640f, Screen.width - 80f);
+            var panelHeight = 470f;
             var panelRect = new Rect(
                 (Screen.width - panelWidth) * 0.5f,
                 (Screen.height - panelHeight) * 0.5f,
@@ -44,18 +45,19 @@ namespace LocalAI.UI
             GUILayout.Label(title, titleStyle);
             GUILayout.Space(4f);
             GUILayout.Label(subtitle, subtitleStyle);
-            GUILayout.Space(42f);
+            GUILayout.Space(38f);
 
-            if (GUILayout.Button("Jouer", buttonStyle, GUILayout.Height(62f)))
+            if (GUILayout.Button("Jouer avec Momo par défaut", buttonStyle, GUILayout.Height(62f)))
             {
-                Play();
+                PlayDefault();
             }
 
             GUILayout.Space(14f);
 
-            GUI.enabled = false;
-            GUILayout.Button("Jouer avec IA custom (bientôt)", buttonStyle, GUILayout.Height(52f));
-            GUI.enabled = true;
+            if (GUILayout.Button("Jouer avec IA custom", buttonStyle, GUILayout.Height(56f)))
+            {
+                OpenCustomPersonalityMenu();
+            }
 
             GUILayout.Space(14f);
 
@@ -69,10 +71,16 @@ namespace LocalAI.UI
             GUILayout.EndArea();
         }
 
-        private void Play()
+        private void PlayDefault()
         {
+            AiPersonalityMode.UseDefault();
             AiPersonalityStorage.Save(MoleDefaultPersonality.Create());
             SceneManager.LoadScene(sceneToLoad);
+        }
+
+        private void OpenCustomPersonalityMenu()
+        {
+            SceneManager.LoadScene(customPersonalityScene);
         }
 
         private void Quit()
@@ -107,7 +115,7 @@ namespace LocalAI.UI
 
             buttonStyle = new GUIStyle(GUI.skin.button)
             {
-                fontSize = 24,
+                fontSize = 23,
                 fontStyle = FontStyle.Bold,
                 alignment = TextAnchor.MiddleCenter
             };

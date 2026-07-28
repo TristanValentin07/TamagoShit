@@ -39,6 +39,13 @@ namespace LocalAI.Config
                     return fallback;
                 }
 
+                if (IsLegacyDefaultPersonality(personality))
+                {
+                    var fixedDefault = AiPersonality.Default();
+                    Save(fixedDefault);
+                    return fixedDefault;
+                }
+
                 return personality;
             }
             catch (Exception exception)
@@ -62,6 +69,30 @@ namespace LocalAI.Config
             File.WriteAllText(FilePath, json);
 
             Debug.Log($"AI personality saved to: {FilePath}");
+        }
+
+        private static bool IsLegacyDefaultPersonality(AiPersonality personality)
+        {
+            if (personality == null)
+            {
+                return false;
+            }
+
+            var name = personality.CharacterName ?? string.Empty;
+            var backstory = personality.Backstory ?? string.Empty;
+
+            if (name.Equals("Ariane", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            if (name.Equals("Momo", StringComparison.OrdinalIgnoreCase) &&
+                backstory.IndexOf("orbe lumineuse", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

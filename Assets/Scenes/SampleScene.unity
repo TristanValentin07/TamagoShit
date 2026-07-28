@@ -695,19 +695,6 @@ MonoBehaviour:
   agentRadius: 2
   moveSpeed: 4
   stoppingDistance: 0.1
-  minWaitTime: 5000
-  maxWaitTime: 50000000
-  idleDelayAfterUserCommand: 30
-  stopIdleMovementOnUserCommand: 1
-  waypoints:
-  - {fileID: 614727139}
-  - {fileID: 64029643}
-  - {fileID: 1590267541}
-  - {fileID: 2026725705}
-  - {fileID: 904069247}
-  - {fileID: 795309208}
-  - {fileID: 1036578965}
-  - {fileID: 0}
   walkClip: {fileID: 1827226128182048838, guid: 4c362488ef899e144b2600dccd5eae86, type: 3}
 --- !u!195 &633226167
 NavMeshAgent:
@@ -822,14 +809,21 @@ MonoBehaviour:
   createOllamaRuntimeIfMissing: 1
   moleCharacter: {fileID: 0}
   moleObjectName: Mole Rat@Walk Forward In Place
+  dragonAnimator: {fileID: 0}
+  dragonObjectName: dragon_attack
+  dragonMarkerId: dragon
+  dragonAttackTrigger: Attack
   requireSceneMarkers: 1
   moveSpeed: 2.2
   acceleration: 8
   angularSpeed: 540
   stoppingDistance: 0.45
   createNavMeshAgentIfMissing: 1
-  defaultPlayerMessage: Qu'est-ce que c'est que cet objet brillant ?
+  defaultPlayerMessage: 
   inputControlName: MomoChatInput
+  launchStartupPrompt: 1
+  startupPrompt: Salut, qui es-tu ?
+  startupPromptDelaySeconds: 0.5
   maxStoredMessages: 10
 --- !u!4 &762898495
 Transform:
